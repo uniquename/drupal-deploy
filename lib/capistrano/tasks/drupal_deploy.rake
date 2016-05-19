@@ -8,6 +8,7 @@ namespace :load do
     set :app_path, 'app'
     if fetch(:install_drush)
       set :drush,  "#{fetch(:shared_path)}/drush/drush"
+      set :drush_version, "~6.0.0"
     end
   end
 end
@@ -157,7 +158,7 @@ namespace :files do
 
   desc "Download drupal sites files (from remote to local)"
   task :download do
-    run_locally do 
+    run_locally do
       on release_roles :app do |server|
         ask(:answer, "Do you really want to download the files on the server to your local files? Nothings will be deleted but files can be ovewrite. (y/N)");
         if fetch(:answer) == 'y' then
@@ -199,7 +200,7 @@ namespace :drush do
   task :install do
     on roles(:app) do
       within shared_path do
-        execute :composer, 'require drush/drush:~6.0.0'
+        execute :composer, "require drush/drush:#{fetch(:drush_version)}"
       end
     end
   end
